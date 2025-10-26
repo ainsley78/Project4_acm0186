@@ -85,9 +85,9 @@ int main() {
 
     // CSV output prompt
     ofstream fout;
+    string outname;
     while (true) {
         cout << "Enter the output filename to save: ";
-        string outname;
         getline(cin, outname);
         fout.open(outname);
         if (fout.is_open()) break;
@@ -133,14 +133,25 @@ int main() {
     for (int i = 0; i < (int)all.size(); i++) {
         cout << all[i];
         if (i != (int)all.size() - 1) cout << " ";
+        // write to CSV
+        fout << all[i];
+        if (i != (int)all.size() - 1) fout << ",";
     }
-    cout << "\n\n";
+    fout << "\n\n";
+
+    cout << "\n";
 
     cout << fixed << setprecision(4);
     cout << "The mean is " << mean(all) << "\n";
     cout << "The median is " << median(all) << "\n";
     cout << "The mode is " << mode(all) << "\n\n";
+
+    // write stats to CSV
+    fout << "mean," << mean(all) << "\n";
+    fout << "median," << median(all) << "\n";
+    fout << "mode," << mode(all) << "\n";
+
     cout << "*** Goodbye. ***\n";
 
-    fout.close(); // CSV will be written in next change
+    fout.close();
 }
