@@ -60,20 +60,26 @@ double mean(vector<double> &v) {
     for (double x : v) sum += x;
     return sum / v.size();
 }
+
 double median(vector<double> &v) {
     int n = v.size();
     if (n % 2 == 1) return v[n/2];
     return (v[n/2 - 1] + v[n/2]) / 2.0;
 }
-double mode(vector<double> &v) {
+
+// Fixed mode: pick the smallest mode if multiple
+double mode(const vector<double> &v) {
     unordered_map<double,int> freq;
-    int best = 0;
-    for (double x : v) best = max(best, ++freq[x]);
-    double sum = 0; int cnt = 0;
+    int maxCount = 0;
+    for (double x : v) maxCount = max(maxCount, ++freq[x]);
+
+    double smallestMode = 1e308; // initialize to a large number
     for (auto &p : freq) {
-        if (p.second == best) { sum += p.first; cnt++; }
+        if (p.second == maxCount && p.first < smallestMode) {
+            smallestMode = p.first;
+        }
     }
-    return sum / cnt;
+    return smallestMode;
 }
 
 int main() {
