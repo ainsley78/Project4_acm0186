@@ -4,8 +4,8 @@
  * Username: acm0186
  * How to compile code: g++ project1_acm0186_Ainsley_McLeod.cpp
  * How to run code: ./a.out
- * https://www.geeksforgeeks.org/cpp/file-handling-c-classes/ - file handling assistance 
- * https://www.geeksforgeeks.org/cpp/vector-in-cpp-stl/ - vector assistance
+ * https://www.geeksforgeeks.org/cpp/file-handling-c-classes/ - file handling assitance 
+ * https://www.geeksforgeeks.org/cpp/vector-in-cpp-stl/ - vector assitance
 */
 
 #include <iostream>
@@ -41,7 +41,6 @@ bool readFile(const string &fname, vector<double> &nums, bool &nf, bool &bad) {
     nums.clear();
     ifstream fin(fname);
     if (!fin.is_open()) { nf = true; return false; }
-
     string line; double val; bool ok = false;
     while (getline(fin, line)) {
         if (parseLine(line, val)) {
@@ -49,7 +48,7 @@ bool readFile(const string &fname, vector<double> &nums, bool &nf, bool &bad) {
             ok = true;
         } else { bad = true; fin.close(); return false; }
     }
-    fin.close(); // close file after reading
+    fin.close();
     if (!ok) { bad = true; return false; }
     return true;
 }
@@ -60,20 +59,19 @@ double mean(vector<double> &v) {
     for (double x : v) sum += x;
     return sum / v.size();
 }
-
 double median(vector<double> &v) {
     int n = v.size();
     if (n % 2 == 1) return v[n/2];
     return (v[n/2 - 1] + v[n/2]) / 2.0;
 }
 
-// Fixed mode: pick the smallest mode if multiple
+// Fix mode: pick the smallest mode if multiple
 double mode(const vector<double> &v) {
     unordered_map<double,int> freq;
     int maxCount = 0;
     for (double x : v) maxCount = max(maxCount, ++freq[x]);
 
-    double smallestMode = 1e308; // initialize to a large number
+    double smallestMode = 1e308;
     for (auto &p : freq) {
         if (p.second == maxCount && p.first < smallestMode) {
             smallestMode = p.first;
@@ -84,6 +82,18 @@ double mode(const vector<double> &v) {
 
 int main() {
     cout << "*** Welcome to Ainsley's Data Analyzer ***\n\n";
+
+    // CSV output prompt
+    ofstream fout;
+    while (true) {
+        cout << "Enter the output filename to save: ";
+        string outname;
+        getline(cin, outname);
+        fout.open(outname);
+        if (fout.is_open()) break;
+        cout << "Invalid file path. Please try again.\n\n";
+    }
+    cout << "*** File has been opened for writing ***\n\n";
 
     int n;
     while (true) {
@@ -131,4 +141,6 @@ int main() {
     cout << "The median is " << median(all) << "\n";
     cout << "The mode is " << mode(all) << "\n\n";
     cout << "*** Goodbye. ***\n";
+
+    fout.close(); // CSV will be written in next change
 }
