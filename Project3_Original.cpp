@@ -4,8 +4,8 @@
  * Username: acm0186
  * How to compile code: g++ project1_acm0186_Ainsley_McLeod.cpp
  * How to run code: ./a.out
- * https://www.geeksforgeeks.org/cpp/file-handling-c-classes/ - file handling assitance 
- * https://www.geeksforgeeks.org/cpp/vector-in-cpp-stl/ - vector assitance
+ * https://www.geeksforgeeks.org/cpp/file-handling-c-classes/ - file handling assistance 
+ * https://www.geeksforgeeks.org/cpp/vector-in-cpp-stl/ - vector assistance
 */
 
 #include <iostream>
@@ -41,13 +41,15 @@ bool readFile(const string &fname, vector<double> &nums, bool &nf, bool &bad) {
     nums.clear();
     ifstream fin(fname);
     if (!fin.is_open()) { nf = true; return false; }
+
     string line; double val; bool ok = false;
     while (getline(fin, line)) {
         if (parseLine(line, val)) {
             nums.push_back(val);
             ok = true;
-        } else { bad = true; return false; }
+        } else { bad = true; fin.close(); return false; }
     }
+    fin.close(); // close file after reading
     if (!ok) { bad = true; return false; }
     return true;
 }
