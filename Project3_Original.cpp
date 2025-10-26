@@ -83,7 +83,7 @@ double mode(const vector<double> &v) {
 int main() {
     cout << "*** Welcome to Ainsley's Data Analyzer ***\n\n";
 
-    // CSV output prompt
+    // CSV output prompt with robust error handling
     ofstream fout;
     string outname;
     while (true) {
@@ -142,14 +142,18 @@ int main() {
     cout << "\n";
 
     cout << fixed << setprecision(4);
-    cout << "The mean is " << mean(all) << "\n";
-    cout << "The median is " << median(all) << "\n";
-    cout << "The mode is " << mode(all) << "\n\n";
+    double avg = mean(all);
+    double med = median(all);
+    double mod = mode(all);
+
+    cout << "The mean is " << avg << "\n";
+    cout << "The median is " << med << "\n";
+    cout << "The mode is " << mod << "\n\n";
 
     // write stats to CSV
-    fout << "mean," << mean(all) << "\n";
-    fout << "median," << median(all) << "\n";
-    fout << "mode," << mode(all) << "\n";
+    fout << "mean," << avg << "\n";
+    fout << "median," << med << "\n";
+    fout << "mode," << mod << "\n";
 
     cout << "*** Goodbye. ***\n";
 
