@@ -4,8 +4,8 @@
  * Username: acm0186
  * How to compile code: g++ project1_acm0186_Ainsley_McLeod.cpp
  * How to run code: ./a.out
- * https://www.geeksforgeeks.org/cpp/file-handling-c-classes/ - file handling assistance 
- * https://www.geeksforgeeks.org/cpp/vector-in-cpp-stl/ - vector assistance
+ * https://www.geeksforgeeks.org/cpp/file-handling-c-classes/ - file handling assitance 
+ * https://www.geeksforgeeks.org/cpp/vector-in-cpp-stl/ - vector assitance
 */
 
 #include <iostream>
@@ -41,7 +41,6 @@ bool readFile(const string &fname, vector<double> &nums, bool &nf, bool &bad) {
     nums.clear();
     ifstream fin(fname);
     if (!fin.is_open()) { nf = true; return false; }
-
     string line; double val; bool ok = false;
     while (getline(fin, line)) {
         if (parseLine(line, val)) {
@@ -49,7 +48,7 @@ bool readFile(const string &fname, vector<double> &nums, bool &nf, bool &bad) {
             ok = true;
         } else { bad = true; fin.close(); return false; }
     }
-    fin.close(); // close file after reading
+    fin.close();
     if (!ok) { bad = true; return false; }
     return true;
 }
@@ -60,20 +59,19 @@ double mean(vector<double> &v) {
     for (double x : v) sum += x;
     return sum / v.size();
 }
-
 double median(vector<double> &v) {
     int n = v.size();
     if (n % 2 == 1) return v[n/2];
     return (v[n/2 - 1] + v[n/2]) / 2.0;
 }
 
-// Fixed mode: pick the smallest mode if multiple
+// Fix mode: pick the smallest mode if multiple
 double mode(const vector<double> &v) {
     unordered_map<double,int> freq;
     int maxCount = 0;
     for (double x : v) maxCount = max(maxCount, ++freq[x]);
 
-    double smallestMode = 1e308; // initialize to a large number
+    double smallestMode = 1e308;
     for (auto &p : freq) {
         if (p.second == maxCount && p.first < smallestMode) {
             smallestMode = p.first;
@@ -127,8 +125,36 @@ int main() {
     cout << "\n\n";
 
     cout << fixed << setprecision(4);
-    cout << "The mean is " << mean(all) << "\n";
-    cout << "The median is " << median(all) << "\n";
-    cout << "The mode is " << mode(all) << "\n\n";
+    double avg = mean(all);
+    double med = median(all);
+    double mod = mode(all);
+
+    cout << "The mean is " << avg << "\n";
+    cout << "The median is " << med << "\n";
+    cout << "The mode is " << mod << "\n\n";
+
+    // Prompt for CSV output after all calculations
+    ofstream fout;
+    string outname;
+    while (true) {
+        cout << "Enter the output filename to save: ";
+        getline(cin, outname);
+        fout.open(outname);
+        if (fout.is_open()) break;
+        cout << "Invalid file path. Please try again.\n\n";
+    }
+
+    // Write results to CSV
+    for (int i = 0; i < (int)all.size(); i++) {
+        fout << all[i];
+        if (i != (int)all.size() - 1) fout << ",";
+    }
+    fout << "\n";
+    fout << "mean," << avg << "\n";
+    fout << "median," << med << "\n";
+    fout << "mode," << mod << "\n";
+
+    fout.close();
+    cout << "*** File " << outname << " has been written to disk ***\n\n";
     cout << "*** Goodbye. ***\n";
 }
