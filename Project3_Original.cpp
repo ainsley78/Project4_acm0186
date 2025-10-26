@@ -83,18 +83,6 @@ double mode(const vector<double> &v) {
 int main() {
     cout << "*** Welcome to Ainsley's Data Analyzer ***\n\n";
 
-    // CSV output prompt with robust error handling
-    ofstream fout;
-    string outname;
-    while (true) {
-        cout << "Enter the output filename to save: ";
-        getline(cin, outname);
-        fout.open(outname);
-        if (fout.is_open()) break;
-        cout << "Invalid file path. Please try again.\n\n";
-    }
-    cout << "*** File has been opened for writing ***\n\n";
-
     int n;
     while (true) {
         cout << "Enter the number of files to read: ";
@@ -133,13 +121,8 @@ int main() {
     for (int i = 0; i < (int)all.size(); i++) {
         cout << all[i];
         if (i != (int)all.size() - 1) cout << " ";
-        // write to CSV
-        fout << all[i];
-        if (i != (int)all.size() - 1) fout << ",";
     }
-    fout << "\n\n";
-
-    cout << "\n";
+    cout << "\n\n";
 
     cout << fixed << setprecision(4);
     double avg = mean(all);
@@ -150,12 +133,28 @@ int main() {
     cout << "The median is " << med << "\n";
     cout << "The mode is " << mod << "\n\n";
 
-    // write stats to CSV
+    // Prompt for CSV output after all calculations
+    ofstream fout;
+    string outname;
+    while (true) {
+        cout << "Enter the output filename to save: ";
+        getline(cin, outname);
+        fout.open(outname);
+        if (fout.is_open()) break;
+        cout << "Invalid file path. Please try again.\n\n";
+    }
+
+    // Write results to CSV
+    for (int i = 0; i < (int)all.size(); i++) {
+        fout << all[i];
+        if (i != (int)all.size() - 1) fout << ",";
+    }
+    fout << "\n";
     fout << "mean," << avg << "\n";
     fout << "median," << med << "\n";
     fout << "mode," << mod << "\n";
 
-    cout << "*** Goodbye. ***\n";
-
     fout.close();
+    cout << "*** File " << outname << " has been written to disk ***\n\n";
+    cout << "*** Goodbye. ***\n";
 }
